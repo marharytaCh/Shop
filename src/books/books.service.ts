@@ -1,19 +1,31 @@
-import { Injectable } from "@nestjs/common";
-import { Book } from './book.model';
+import { Injectable } from '@nestjs/common';
+import { BOOKS } from '../mocks/books.mocks'
 
 @Injectable()
-export class BooksService{
-  private books: Book[] = [ ];
-
-  pasteBook(title: string, author:string){
-    const bookId = Math.random().toString();
-    const newBook = new Book(bookId, title, author);
-    this.books.push(newBook);
-    return bookId;
-  }
+export class BooksService {
+  books = BOOKS;
 
   getBooks(){
-    return [...this.books]; // "..." вытягиваем все елементы из массива books и 
-                            //вставляем их как новые элементы в новый массив
+    return this.books;
+  }
+
+  getBookById(bookId){
+    let id = Number(bookId);
+     const book = this.books.find(
+       (book) => book.id === id
+       );
+    return book;
+  }
+
+  getBookByName(bookName){
+    let name = String(bookName);
+    const book = this.books.find(
+      (book) => book.title === name
+      );
+      return book;
+  }
+
+  addBook(book){
+    return this.books.push(book);
   }
 }

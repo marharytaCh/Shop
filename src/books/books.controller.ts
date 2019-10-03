@@ -1,23 +1,34 @@
-import { Controller, Post, Body, Get } from "@nestjs/common";
-import { BooksService } from './books.service'
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { BooksService } from './books.service';
+import { CreateBookDTO } from './dto/create-books.dto'
+
+
 
 @Controller('books')
 export class BooksController {
   constructor(private booksService: BooksService) {}
 
-  @Post()
-  addBook(@Body('title') bookTitle: string, 
-          @Body('author') bookAuthor: string
-        ){
-    const generatedId = this.booksService.pasteBook(
-      bookTitle, 
-      bookAuthor
-      );
-    return { id: generatedId };
+  @Get()
+  getBooks() {
+    const books = this.booksService.getBooks();
+    return books;
   }
 
-  @Get()
-  getAllBooks(){
-      return this.booksService.getBooks();
+  @Get(':bookId')
+  getBookById(@Param('bookId') bookId){
+    const book = this.booksService.getBookById(bookId);
+    return book;
   }
+
+  @Get(':bookName')
+  getBookByName(@Param('bookName') bookName){
+    const book = this.booksService.getBookByName(bookName);
+    return book;
+  }
+
+  @Post()
+    addBook(@Body() createBookDTO: CreateBookDTO) {
+        const book = this.booksService.addBook(createBookDTO);
+        return book;
+    }
 }
